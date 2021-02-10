@@ -2,15 +2,48 @@ from tkinter import *
 from tkinter import  messagebox
 import sqlite3
 
+#-------------------Comienzo Funciones-------------------
+
+def conexionBD():
+    miConexion=sqlite3.connect("Usuarios")
+    miCursos=miConexion.cursor()
+
+    try:
+
+        miCursos.execute('''
+            CREATE TABLE DATOSUSUARIOS(
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            NOMBRE_USUARIO VARCHAR(50),
+            PASSWORD VARCHAR(50),
+            APELLIDO VARCHAR(10),
+            DIRECCION VARCHAR(50),
+            COMENTARIOS VARCHAR(100)
+            )
+            ''')
+        messagebox.showinfo("BBDD", "BBDD creada con éxito")
+
+    except:
+        messagebox.showwarning("¡Atención!", "La BBDD ya existe")
+
+def salirAplicacion():
+    valor=messagebox.askquestion("Salir", "Deseas salir de la apliciación")
+
+    if valor=="yes":
+        root.destroy()
+
+
+
+
+#--------------------------Comienzo barraMenu-----------
+
 root=Tk()
 
 barraMenu=Menu(root)
 root.config(menu=barraMenu, width= 300, height=300)
 
 bbddMenu=Menu(barraMenu, tearoff=0)
-bbddMenu.add_command(label="Conectar")
-bbddMenu.add_command(label="Salir")
-
+bbddMenu.add_command(label="Conectar", command=conexionBD)
+bbddMenu.add_command(label="Salir", command=salirAplicacion)
 borrarMenu=Menu(barraMenu, tearoff=0)
 borrarMenu.add_command(label="Borrar campos")
 
@@ -29,8 +62,71 @@ barraMenu.add_cascade(label="Borrar", menu=borrarMenu)
 barraMenu.add_cascade(label="CRUD", menu=crudMenu)
 barraMenu.add_cascade(label="Ayuda", menu=ayudaMenu)
 
+# ----------------------segmento de campos------------------
 
+miFrame=Frame(root)
+miFrame.pack()
 
+cuadroID=Entry(miFrame)
+cuadroID.grid(row=0, column=1, padx=10, pady=10)
+
+cuadroNombre=Entry(miFrame)
+cuadroNombre.grid(row=1, column=1, padx=10, pady=10)
+cuadroNombre.config(fg="red", justify ="right")
+
+cuadroPass=Entry(miFrame)
+cuadroPass.grid(row=2, column=1, padx=10, pady=10)
+cuadroPass.config(show="?")
+
+cuadroApellido=Entry(miFrame)
+cuadroApellido.grid(row=3, column=1, padx=10, pady=10)
+
+cuadroDireccion=Entry(miFrame)
+cuadroDireccion.grid(row=4, column=1, padx=10, pady=10)
+
+textocomentario=Text(miFrame, width= 16, height=5)
+textocomentario.grid(row=5, column=1, padx=10, pady=10)
+scrollVert=Scrollbar(miFrame, command=textocomentario.yview)
+scrollVert.grid(row=5, column=2, sticky="nsew")
+
+textocomentario.config(yscrollcommand=scrollVert.set)
+
+#------------------------Comienzo de Label---------------------------
+
+idLabel=Label(miFrame, text="Id:")
+idLabel.grid(row=0, column=0, sticky="e", padx=10, pady=10)
+
+nombreLabel=Label(miFrame, text="Nombre:")
+nombreLabel.grid(row=1, column=0, sticky="e", padx=10, pady=10)
+
+passLabel=Label(miFrame, text="Password:")
+passLabel.grid(row=2, column=0, sticky="e", padx=10, pady=10)
+
+apellidoLabel=Label(miFrame, text="Apellido:")
+apellidoLabel.grid(row=3, column=0, sticky="e", padx=10, pady=10)
+
+dirLabel=Label(miFrame, text="Dirección:")
+dirLabel.grid(row=4, column=0, sticky="e", padx=10, pady=10)
+
+ComentLabel=Label(miFrame, text="Comentarios:")
+ComentLabel.grid(row=5, column=0, sticky="e", padx=10, pady=10)
+
+#--------------Comienza los Botones --------------------------------------
+
+miFrame2=Frame(root)
+miFrame2.pack()
+
+botonCrear=Button(miFrame2, text="Crear")
+botonCrear.grid(row=1, column=0, sticky="e", padx=10, pady=10)
+
+botonLeer=Button(miFrame2, text="Leer")
+botonLeer.grid(row=1, column=1, sticky="e", padx=10, pady=10)
+
+botonUpdate=Button(miFrame2, text="Actualizar")
+botonUpdate.grid(row=1, column=2, sticky="e", padx=10, pady=10)
+
+botonBorrar=Button(miFrame2, text="Borrar")
+botonBorrar.grid(row=1, column=3, sticky="e", padx=10, pady=10)
 
 
 
