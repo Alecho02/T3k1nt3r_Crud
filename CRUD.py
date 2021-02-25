@@ -6,11 +6,11 @@ import sqlite3
 
 def conexionBD():
     miConexion=sqlite3.connect("Usuarios")
-    miCursos=miConexion.cursor()
+    miCursor=miConexion.cursor()
 
-    try:
+    try: 
 
-        miCursos.execute('''
+        miCursor.execute('''
             CREATE TABLE DATOSUSUARIOS(
             ID INTEGER PRIMARY KEY AUTOINCREMENT,
             NOMBRE_USUARIO VARCHAR(50),
@@ -31,6 +31,28 @@ def salirAplicacion():
     if valor=="yes":
         root.destroy()
 
+def limpiarCampos():
+
+	miNombre.set('')
+	miId.set('')
+	miApellido.set('')
+	miDireccion.set('')
+	miPass.set('')
+	textocomentario.delete(1.0, END)
+
+def crear():
+	miConexion=sqlite3.connect("Usuarios")
+	miCursor=miConexion.cursor()
+	miCursor.execute("INSERT INTO DATOSUSUARIOS VALUES(NULL, '" + miNombre.get() +
+		"','" + miPass.get() + 
+		"','" + miApellido.get() +
+		"','" + miDireccion.get()+
+		"','" + textocomentario.get("1.0", END) + "')")
+
+	miConexion.commit()
+	messagebox.showinfo('BBDD', 'Registro ingresado con éxito')
+
+
 
 
 
@@ -44,11 +66,12 @@ root.config(menu=barraMenu, width= 300, height=300)
 bbddMenu=Menu(barraMenu, tearoff=0)
 bbddMenu.add_command(label="Conectar", command=conexionBD)
 bbddMenu.add_command(label="Salir", command=salirAplicacion)
+
 borrarMenu=Menu(barraMenu, tearoff=0)
-borrarMenu.add_command(label="Borrar campos")
+borrarMenu.add_command(label="Borrar campos", command=limpiarCampos)
 
 crudMenu=Menu(barraMenu, tearoff=0)
-crudMenu.add_command(label="Crear")
+crudMenu.add_command(label="Crear", command=crear)
 crudMenu.add_command(label="Leer")
 crudMenu.add_command(label="Actualizar")
 crudMenu.add_command(label="Borrar")
@@ -67,21 +90,27 @@ barraMenu.add_cascade(label="Ayuda", menu=ayudaMenu)
 miFrame=Frame(root)
 miFrame.pack()
 
-cuadroID=Entry(miFrame)
+miId=StringVar()
+miNombre=StringVar()
+miApellido=StringVar()
+miPass=StringVar()
+miDireccion=StringVar()
+
+cuadroID=Entry(miFrame, textvariable=miId)
 cuadroID.grid(row=0, column=1, padx=10, pady=10)
 
-cuadroNombre=Entry(miFrame)
+cuadroNombre=Entry(miFrame, textvariable=miNombre)
 cuadroNombre.grid(row=1, column=1, padx=10, pady=10)
 cuadroNombre.config(fg="red", justify ="right")
 
-cuadroPass=Entry(miFrame)
+cuadroPass=Entry(miFrame, textvariable=miPass)
 cuadroPass.grid(row=2, column=1, padx=10, pady=10)
 cuadroPass.config(show="?")
 
-cuadroApellido=Entry(miFrame)
+cuadroApellido=Entry(miFrame, textvariable=miApellido)
 cuadroApellido.grid(row=3, column=1, padx=10, pady=10)
 
-cuadroDireccion=Entry(miFrame)
+cuadroDireccion=Entry(miFrame, textvariable=miDireccion)
 cuadroDireccion.grid(row=4, column=1, padx=10, pady=10)
 
 textocomentario=Text(miFrame, width= 16, height=5)
@@ -116,7 +145,7 @@ ComentLabel.grid(row=5, column=0, sticky="e", padx=10, pady=10)
 miFrame2=Frame(root)
 miFrame2.pack()
 
-botonCrear=Button(miFrame2, text="Crear")
+botonCrear=Button(miFrame2, text="Crear", command=crear)
 botonCrear.grid(row=1, column=0, sticky="e", padx=10, pady=10)
 
 botonLeer=Button(miFrame2, text="Leer")
