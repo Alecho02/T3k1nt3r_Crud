@@ -43,11 +43,15 @@ def limpiarCampos():
 def crear():
 	miConexion=sqlite3.connect("Usuarios")
 	miCursor=miConexion.cursor()
-	miCursor.execute("INSERT INTO DATOSUSUARIOS VALUES(NULL, '" + miNombre.get() +
+	"""miCursor.execute("INSERT INTO DATOSUSUARIOS VALUES(NULL, '" + miNombre.get() +
 		"','" + miPass.get() + 
 		"','" + miApellido.get() +
 		"','" + miDireccion.get()+
-		"','" + textocomentario.get("1.0", END) + "')")
+		"','" + textocomentario.get("1.0", END) + "')")"""
+
+	datos=miNombre.get(),miPass.get(),miApellido.get(),miDireccion.get(),textocomentario.get("1.0", END)
+
+	miCursor.execute("INSERT INTO DATOSUSUARIOS VALUES(NULL,?,?,?,?,?)", (datos))
 
 	miConexion.commit()
 	messagebox.showinfo('BBDD', 'Registro ingresado con éxito')
@@ -73,12 +77,19 @@ def leer():
 def actualizar():
 	miConexion=sqlite3.connect("Usuarios")
 	miCursor=miConexion.cursor()
-	miCursor.execute("UPDATE DATOSUSUARIOS SET NOMBRE_USUARIO= '" + miNombre.get() +
+
+	datos=miNombre.get(),miPass.get(),miApellido.get(),miDireccion.get(),textocomentario.get("1.0", END)
+
+	"""ursor.execute("UPDATE DATOSUSUARIOS SET NOMBRE_USUARIO= '" + miNombre.get() +
 		"',PASSWORD='" + miPass.get() + 
 		"',APELLIDO='" + miApellido.get() +
 		"',DIRECCION='" + miDireccion.get()+
 		"',COMENTARIOS='" + textocomentario.get("1.0", END) + 
-		"'WHERE ID=" + miId.get())
+		"'WHERE ID=" + miId.get())"""
+
+
+	miCursor.execute("UPDATE DATOSUSUARIOS SET NOMBRE_USUARIO=?,PASSWORD=?,APELLIDO=?,DIRECCION=?,COMENTARIOS=?" +
+		"WHERE ID=" + miId.get(),(datos))
 
 	miConexion.commit()
 	messagebox.showinfo('BBDD', 'Registro Actualizado con éxito')
